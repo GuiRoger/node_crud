@@ -30,7 +30,16 @@ import { Product } from '@prisma/client';
     return product;
   }
 
+  const getById = async(id:string):Promise<Product> =>{
+      return await prismaClient.product.findUnique({
+        where:{
+          id
+        }
+      });
+  }
+
   export const ProductRepository ={
     create,
-    getByName
+    getByName,
+    getById
   }

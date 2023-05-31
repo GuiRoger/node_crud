@@ -1,18 +1,9 @@
 import {Request, Response } from 'express';
-import { prismaClient } from '../database/prismaClient';
+import { ProductCategoryService } from '../services/productCategory.service';
 
 export class ProductCategoryController{
   public async create(request:Request,response:Response){
-    const {product_id,category_id} = request.body;
-
-    const link =  prismaClient.productCategory.create({
-      data:{
-        product_id,
-        category_id
-      }
-    });
-
-    return response.json(link);
+    return await ProductCategoryService.create(request,response);
   }
 }
 

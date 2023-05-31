@@ -1,6 +1,7 @@
 import {Request,Response} from 'express';
 import { ProductRepository } from "../repositories/product.repository";
 import { z } from 'zod';
+import { Product } from '@prisma/client';
 
 
    const create =  async (req:Request,res:Response):Promise<Response> =>{
@@ -36,9 +37,26 @@ import { z } from 'zod';
       product: productCreated
     });
   }
+  const getById = async (req:Request,res:Response):Promise<Response> =>{
+    const { product_id } = req.params;
+    if(!product_id){
+      return res.status(400).json({
+        message: "Id not specified",
+        success:false,
+        product:null
+      })
+    }
 
+    const product = await ProductRepository.getById(product_id);
+    return res.status(200).json({
+      message:"Product found successfully",
+      success:true,
+      product
+    });
+  }
 
 
   export const ProductService ={
-    create: create
+    create,
+    getById
   }

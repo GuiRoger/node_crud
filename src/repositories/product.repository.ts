@@ -5,8 +5,8 @@ import { Product } from '@prisma/client';
 
 
 
-  const  create = async(req : Request):Promise<Product> =>{
-    const {name,description,price} = req.body;
+  const  create = async(req:Request):Promise<Product> =>{
+    const {description,name,price} = req.body;
 
     const product = await prismaClient.product.create({
       data:{
@@ -19,7 +19,18 @@ import { Product } from '@prisma/client';
     return product;
   }
 
+  const getByName = async(name:string):Promise<Product> =>{
+   
+    const product = await prismaClient.product.findUnique({
+      where:{
+        name
+      }
+    });   
+
+    return product;
+  }
 
   export const ProductRepository ={
-    create: create
+    create,
+    getByName
   }

@@ -5,12 +5,13 @@ import { Category } from '@prisma/client';
 
 
 
-  const create = async(req : Request):Promise<Category> =>{
-    const {description} = req.body;
+
+  const create = async({description,active}):Promise<Category> =>{  
 
     const category = await prismaClient.category.create({
       data:{
-        description
+        description,
+        active
       }
     })    
 

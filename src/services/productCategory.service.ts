@@ -22,6 +22,13 @@ const create = async(req:Request,res:Response): Promise<Response>=>{
     })
   }
 
+  if(!existingCategory.active){
+    return res.status(400).json({
+      message:"Category not active",
+      success:false,
+      
+    });
+  }
   const linkedSuccessfully =  await ProductCategoryRepository.linkProductCategory({product_id,category_id})
 
   if(!linkedSuccessfully){

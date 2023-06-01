@@ -1,7 +1,8 @@
 import {Request,Response} from 'express';
 import { ProductRepository } from "../repositories/product.repository";
+import { ProductCategoryRepository } from "../repositories/productCategory.repository";
+import { CategoryRepository } from "../repositories/category.repository";
 import { z } from 'zod';
-import { Product } from '@prisma/client';
 
 
    const create =  async (req:Request,res:Response):Promise<Response> =>{
@@ -9,11 +10,12 @@ import { Product } from '@prisma/client';
       name: z.string(),
       description: z.string(),
       price:z.number(),
-      active: z.boolean().optional()
+      active: z.boolean().optional(),
+      category_id:z.string()
     });
 
     const product = createProductSchema.safeParse(req.body)
-    console.log(product)
+    
     if(!product.success){
       return res.status(400).json({
         success:false,
@@ -21,6 +23,15 @@ import { Product } from '@prisma/client';
         product:null
       })
     }
+    const existingCategory = await CategoryRepository.getById(product.data.category_id);
+    if(!existingCategory){
+      return res.status(500).json({
+        message:"No category found with this id",
+        success:false,
+        product:null
+      });
+    }
+
     const existingProduct = await ProductRepository.getByName(req.body.name);
     if(existingProduct){
       return res.status(500).json({
@@ -31,9 +42,12 @@ import { Product } from '@prisma/client';
     }
     const productCreated = await ProductRepository.create(req);
 
+
+    const linkProductCategory = await ProductCategoryRepository.linkProductCategory({product_id:productCreated.id , category_id: product.data.category_id})
+
     return res.status(201).json({
       success:true,
-      message:"Product created successfully",
+      message: linkProductCategory ? "Product created successfully":"Product created successfully, but it was not possible to link with the indicated category",
       product: productCreated
     });
   }

@@ -7,8 +7,17 @@ export class ProductController{
     return await ProductService.create(request,response);
   }
 
-  public async getById (){
-
+  public async getById (request:Request,response:Response){
+    return await ProductService.getById(request,response)
   }
+
+  public async edit(request:Request,response:Response){
+    return await ProductService.edit(request,response);
+  }
+  public async delete(request:Request,response:Response){
+    return await ProductService.delete(request,response);
+  }
+  
+  
 }
 

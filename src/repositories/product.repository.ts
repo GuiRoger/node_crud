@@ -38,8 +38,38 @@ import { Product } from '@prisma/client';
       });
   }
 
+  const edit = async({id,name,description,price,active}):Promise<Product> =>{
+    return await prismaClient.product.update({
+      where:{
+        id
+      },
+      data:{
+        name,
+        description,
+        price,
+        active
+      }
+    });
+  }
+  const deleteProduct = async(id:string):Promise<boolean> =>{
+    try{
+       await prismaClient.product.delete({
+        where:{
+          id
+        }
+      });
+      
+        return true;  
+    } catch(err){
+      return false;
+    }
+    
+  }
+
   export const ProductRepository ={
     create,
     getByName,
-    getById
+    getById,
+    edit,
+    delete: deleteProduct
   }

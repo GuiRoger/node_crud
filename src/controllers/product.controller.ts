@@ -14,9 +14,13 @@ export class ProductController{
   public async edit(request:Request,response:Response){
     return await ProductService.edit(request,response);
   }
-  
+
   public async delete(request:Request,response:Response){
     return await ProductService.delete(request,response);
+  }
+
+  public async getAll(req:Request,res:Response){
+    return await ProductService.getAll(req,res);
   }
   
   

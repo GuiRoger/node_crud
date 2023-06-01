@@ -14,16 +14,15 @@ import { z } from 'zod';
       category_id:z.string()
     });
 
-    const product = createProductSchema.safeParse(req.body)
-    
+    const product = createProductSchema.safeParse(req.body)   
     if(!product.success){
       return res.status(400).json({
         success:false,
-        message: "Error creating product",
+        message:"Bad request",
         product:null
       })
     }
-    const existingCategory = await CategoryRepository.getById(product.data.category_id);
+    const existingCategory = await CategoryRepository.getById(req.body.category_id);
     if(!existingCategory){
       return res.status(500).json({
         message:"No category found with this id",
@@ -132,11 +131,22 @@ import { z } from 'zod';
     })
   }
 
+  const getAll = async (req:Request, res:Response):Promise<Response>=>{
+    const prods = await ProductRepository.getAll();
+
+    return res.json({
+      message:"Products founds",
+      success:true,
+      products: prods
+    });
+  }
+
 
 
   export const ProductService ={
     create,
     getById,
     edit,
-    delete:deleteProd
+    delete:deleteProd,
+    getAll
   }

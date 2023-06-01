@@ -18,14 +18,16 @@ import { Category } from '@prisma/client';
     return category;
   }
 
-  const getById = async(category_id : string):Promise<Category> =>{
+  const getById = async(id : string):Promise<Category> =>{
     return await prismaClient.category.findUnique({
       where:{
-        id: category_id
+        id
       },
       include:{
         ProductCategory:{
-
+          select:{
+            product_id:true
+          }
         }
       } 
   });     
@@ -49,9 +51,22 @@ import { Category } from '@prisma/client';
     return updatedCategory;
   }
 
-  const deleteCategory = async(id):Promise<boolean> =>{
+  const deleteCategory = async(id:string):Promise<boolean> =>{
     try{
-        await prismaClient.category.delete({
+      const linkId = await prismaClient.productCategory.findFirst({
+        where:{
+         category_id:id 
+        }
+      });
+      
+      await prismaClient.productCategory.delete({
+        where:{
+          id:linkId.id
+        }
+      });     
+      
+
+      await prismaClient.category.delete({
           where:{
             id
           }

@@ -34,6 +34,13 @@ import { Product } from '@prisma/client';
       return await prismaClient.product.findUnique({
         where:{
           id
+        },
+        include:{
+          ProductCategory :{
+           select:{
+            category_id:true
+           }
+          }
         }
       });
   }
@@ -51,8 +58,21 @@ import { Product } from '@prisma/client';
       }
     });
   }
+
   const deleteProduct = async(id:string):Promise<boolean> =>{
     try{
+      const link = await prismaClient.productCategory.findFirst({
+        where:{
+          product_id:id
+        }
+      });
+
+      await prismaClient.productCategory.delete({
+        where:{
+          id:link.id
+        }
+      });
+
        await prismaClient.product.delete({
         where:{
           id
@@ -66,10 +86,14 @@ import { Product } from '@prisma/client';
     
   }
 
-  export const ProductRepository ={
+  const getAll = async():Promise<Product[] > =>{ 
+    return await prismaClient.product.findMany();
+  }
+  export const ProductRepository = {
     create,
     getByName,
     getById,
     edit,
-    delete: deleteProduct
+    delete: deleteProduct,
+    getAll
   }

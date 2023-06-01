@@ -102,7 +102,9 @@ import { z } from 'zod'
 
   const deleteCategory = async(req:Request,res:Response):Promise<Response>=>{
     const { category_id} = req.params
+
     const category = await CategoryRepository.getById(category_id);
+    console.log(category)
     if(!category){
       return res.status(404).json({
         message:"Category not found",

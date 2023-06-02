@@ -66,18 +66,21 @@ import { Product } from '@prisma/client';
           product_id:id
         }
       });
+      console.log("linkProd:",link)
+      if(link){        
+        await prismaClient.productCategory.delete({
+          where:{
+            id:link.id
+          }
+        })
+      }
 
-      await prismaClient.productCategory.delete({
-        where:{
-          id:link.id
-        }
-      });
-
-       await prismaClient.product.delete({
+      await prismaClient.product.delete({
         where:{
           id
         }
       });
+  
       
         return true;  
     } catch(err){

@@ -103,21 +103,21 @@ import { z } from 'zod';
   }
 
   const deleteProd = async (req:Request,res:Response):Promise<Response> =>{
-    const {id} = req.body;
-    if(!id){
+    const {product_id} = req.params;
+    if(!product_id){
       return res.status(400).json({
         message:"Bad Request",
         success:false
       })
     }
-    const existingProduct = await ProductRepository.getById(id);
+    const existingProduct = await ProductRepository.getById(product_id);
     if(!existingProduct){
       return res.status(404).json({
         message:"Product not found",
         success:false
       })
     }
-    const result = await ProductRepository.delete(id);
+    const result = await ProductRepository.delete(product_id);
     if(!result){
       return res.status(500).json({
         message:"Internal Server error",

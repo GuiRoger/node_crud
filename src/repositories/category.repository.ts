@@ -58,12 +58,15 @@ import { Category } from '@prisma/client';
          category_id:id 
         }
       });
-      
-      await prismaClient.productCategory.delete({
-        where:{
-          id:linkId.id
-        }
-      });     
+      console.log(linkId)
+      if(linkId){
+          await prismaClient.productCategory.delete({
+            where:{
+              id:linkId.id
+            }
+          });     
+
+      }
       
 
       await prismaClient.category.delete({

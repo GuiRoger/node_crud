@@ -24,7 +24,7 @@ import { z } from 'zod';
     }
     const existingCategory = await CategoryRepository.getById(req.body.category_id);
     if(!existingCategory){
-      return res.status(500).json({
+      return res.status(404).json({
         message:"No category found with this id",
         success:false,
         product:null
@@ -61,6 +61,13 @@ import { z } from 'zod';
     }
 
     const product = await ProductRepository.getById(product_id);
+    if(!product){
+      return res.status(404).json({
+        message:"Product not found",
+        success:false,
+        product
+      });
+    }
     return res.status(200).json({
       message:"Product found successfully",
       success:true,

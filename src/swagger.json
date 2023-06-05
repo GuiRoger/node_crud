@@ -1,0 +1,229 @@
+{
+  "openapi":"3.0.0",
+  "info":{
+    "title":"Products API for learning Node",
+    "description":"This API have a objective ",
+    "termsOfService":"http://localhost:3000/v1/terms",
+    "contact":{
+      "email":"guilhermerogerbergamini@gmail.com"
+    },
+    "version":"1.0.0"
+    
+  },
+  "servers":[
+    {
+      "url":"http://localhost:3000/v1",
+      "description":"Desenv API"
+    }
+  ],
+  "paths":{
+    "/product":{
+      "post":{
+        "summary":"Product Registration",
+        "description":"This route is used to register products",
+        "tags":["Products"],
+        "requestBody":{
+          "content":{
+            "application/json":{
+              "schema":{
+                "$ref":"#/components/schemas/Product"
+              },
+              "examples":{
+                "product":{
+                  "value":{
+                    "name":"Product Name",
+                    "description":"Product Description",
+                    "price": 2,
+                    "category_id":"d33aa3be-3aef-4b65-87ff-afcbdfe5719a"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses":{
+          "201":{
+            "description":"Product created successfully",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type":"object",
+                  "items":{
+                    "$ref":"#/components/schemas/Product"
+                  }
+                }
+              }
+            }
+          },
+          "400":{
+            "description":"Bad Request"
+          },
+          "404":{
+            "description":"No category found with this id"
+          },
+          "500":{
+            "description":"Product already exists"
+          }
+        }
+      },
+      "get":{
+        "summary":"Get All Products",
+        "description":"This route is used to retrieve all products",
+        "tags":["Products"],
+        "responses":{
+          "200":{
+            "description":"OK",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type":"array",
+                  "items":{
+                    "$ref":"#/components/schemas/Product"
+                  }
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal server error"
+          }
+        }
+      }      
+    },
+    "/product/{product_id}":{
+      "get":{
+        "tags":["Products"],
+        "summary":"Get a product by id",
+        "description":"This route is used to retrieve all products",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "description": "The name that needs to be fetched. Use user1 for testing. ",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses":{
+          "200":{
+            "description":"Product found successfully",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type":"object",
+                  "properties":{
+                    "success":{
+                      "type":"boolean"                      
+                    },
+                    "message":{
+                      "type":"string"
+                    },
+                    "product":{
+                      "type":"object",                        
+                      "$ref":"#/components/schemas/Product"
+                      
+                    }
+                 
+                  }
+                  
+                }
+              }
+            }
+          },
+          "400":{
+            "description":"Id not specified",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type":"object",
+                  "properties":{
+                    "success":{"type":"boolean"},
+                    "message":{"type":"string"},
+                    "product":{"type":"object","value":"null"}
+
+                  }
+                }
+              }
+            }
+          },
+          "404":{
+            "description":"Product not found",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type":"object",
+                  "properties":{
+                    "success":{"type":"boolean"},
+                    "message":{"type":"string"},
+                    "product":{"type":"object","value":"null"}
+
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    
+  },
+  "components":{
+    "schemas":{
+      "Product":{
+        "type":"object",
+        "properties":{
+          "name":{
+            "type":"string" 
+          },
+          "description":{
+            "type":"string"
+          },
+          "price":{
+            "type":"number"
+          },
+          "active":{
+            "type":"boolean"
+          },
+          "id":{
+            "type":"string"
+          },
+          "productCategory":{
+            "type":"array"
+          }
+        }
+      },
+      "Category":{
+        "type":"object",
+        "properties":{
+          "id":{
+            "type":"string"
+          },
+          "description":{
+            "type":"string"
+          },
+          "active":{
+            "type":"boolean"
+          },
+          "created_at":{
+            "type":"date"
+          }
+        }
+      },
+      "ProductCategory":{
+        "id":{
+          "type":"string"
+        },
+        "product_id":{
+          "type":"string"
+        },
+        "category_id":{
+          "type":"string"
+        }
+      }
+    }
+  }
+
+} 

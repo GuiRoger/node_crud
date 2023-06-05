@@ -9,5 +9,10 @@ const router = Router();
 router.use("/product",productRoutes);
 
 router.use("/category",categoryRoutes);
+router.use("/terms",(req,res)=>{
+  return res.json({
+    message:"Terms and Conditions"
+  });
+})
 
 export { router };
